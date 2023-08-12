@@ -74,23 +74,28 @@ class PostSerializer(serializers.ModelSerializer):
     scraps_count = serializers.SerializerMethodField()
     comment_count = serializers.SerializerMethodField() 
     image = serializers.ImageField(use_url=True)
+    #recomments_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
         fields = [ 
             "id",
             "image",
+            "description",
             "title",
             "painter",
+            "type",
             "scraps_count",
             "comment_count",
+            #"recomments_count"
+
         ]
     def get_scraps_count(self, obj):
         return obj.scraps.count()
 
     def get_comment_count(self, obj):
-        return obj.comment.count()
-
+        return obj.comment.count() 
+    
 class PostDetailSerializer(serializers.ModelSerializer):
     scraps_count = serializers.SerializerMethodField()
     comment_count = serializers.SerializerMethodField()
@@ -100,12 +105,12 @@ class PostDetailSerializer(serializers.ModelSerializer):
         fields = [ 
             "id",
             "image",
+            "description",
             "content",
             "title",
             "painter",
             "drawing_technique",
             "work_year",
-            
             #"type_choices",
             "type",
             "scraps",
@@ -118,5 +123,4 @@ class PostDetailSerializer(serializers.ModelSerializer):
         return obj.scraps.count()
     
     def get_comment_count(self, obj):
-        return obj.comment.count()
-
+        return obj.comment.count() 

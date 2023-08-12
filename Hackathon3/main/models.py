@@ -7,7 +7,8 @@ from django.db import models
 class Post(models.Model):
     author = models.ForeignKey('account.User', null=True, on_delete=models.CASCADE)  # 게시물 작성자
     title = models.CharField(max_length=200, null=True)
-    painter = models.CharField(max_length=30, null=True)  # 그림 작품 작가
+    painter = models.CharField(max_length=30, null=True)
+    description=models.TextField(null=True)  # 그림 작품 작가
     drawing_technique = models.CharField(
         max_length=50, null=True
     )  # 피그마 탭1 oil on canvas 부분. 작품 형식 작성 부분
@@ -33,11 +34,18 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     content = models.TextField()  # 댓글 내용
     likes = models.ManyToManyField('account.User',related_name="liked_comments", blank=True )
+    #def get_comment_like_count(self):
+        #return self.comment_like.count()
+
+    #def update_like_count(self):
+        #self.like_count = self.get_comment_like_count()
+        #self.save()
 
 
 class Recomment(models.Model):
-    author = models.ForeignKey('account.User', null=True, on_delete=models.CASCADE)  # 대댓글 작성자
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name="recomments")
+    author = models.ForeignKey('account.User', null=True, on_delete=models.CASCADE) 
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments", null=True) # 대댓글 작성자
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name="recomments", null=True)
     # 대댓글이 달린 댓글
     created_at = models.DateTimeField(auto_now_add=True)
     content = models.TextField()  # 대댓글 내용

@@ -60,7 +60,7 @@ class PostDetailView(views.APIView):  # 작품 해설(detail) 조회
 
 class PostScrapView(views.APIView):
     def get(self, request, pk):
-        post = get_object_or_404(Post, id=pk)
+        post = get_object_or_404(Post, pk=pk)
         scraped_by_user = request.user in post.scraps.all()
         return Response({'scraped': scraped_by_user})
 
@@ -95,7 +95,7 @@ class CommentView(views.APIView):  # 댓글 조회, 작성
     def post(self, request, pk, format=None):
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(post_id=pk)
+            serializer.save(post_pk=pk)
             return Response({'message': '댓글작성 성공', 'data': serializer.data})
         return Response(serializer.errors) 
     

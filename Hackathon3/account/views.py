@@ -4,9 +4,12 @@ from rest_framework import views
 from rest_framework.status import *
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+
 
 from .models import *
 from .serializers import *
+from main.serializers import *
 
 # Create your views here.
 
@@ -55,3 +58,19 @@ class ProfileView(views.APIView):
             serializer.save()
             return Response({'message': '프로필 업데이트 성공', 'data': serializer.data}, status=HTTP_200_OK)
         return Response({'message': '프로필 업데이트 실패', 'data': serializer.errors}, status=HTTP_400_BAD_REQUEST)
+
+
+
+class MyScrapedPostsView(views.APIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return user.scraped_posts.all()
+
+    def get(self, request):
+        scraped_posts = self.get_queryset()
+        serializer = PostSerializer(scraped_posts, many=True)
+        return Response(serializer.data)
+        
