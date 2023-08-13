@@ -30,7 +30,7 @@ def load_json_and_save_to_model(file_path):
         existing_place = Place.objects.filter(name=name).first()
         if existing_place:
             print(f"Place '{name}' already exists. Skipping...")
-            continue
+            return
 
         place = Place(
             name=name,
@@ -48,7 +48,7 @@ def load_json_and_save_to_model(file_path):
 
         )
         place.save()
-load_json_and_save_to_model('지도.json')
+load_json_and_save_to_model('map.json')
 
 
 class PlaceFilterView(views.APIView):

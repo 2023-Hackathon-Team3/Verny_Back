@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-@ic(wsa@rm#xfpwt3w8nxeug37!9ygoo(w8gn$ju7c-y^q=i*&"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['yewon1209.pythonanywhere.com'] #yewon1209.pythonanywhere.com
 
 AUTH_USER_MODEL = "account.User"
 # Application definition
@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework_simplejwt",
+    'rest_framework.authtoken',
+    
     "corsheaders",
     "account",
     "main",
