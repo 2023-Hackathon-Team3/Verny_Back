@@ -7,12 +7,16 @@ app_name = "main"
 urlpatterns = [
     path("posts/", PostListView.as_view()),
     path("postsadd/", PostAddView.as_view()),
+    path("posts/<int:pk>/edit/", PostEditView.as_view()),
     path("posts/<int:pk>/", PostDetailView.as_view()),
     path("posts/<int:pk>/comments/", CommentView.as_view()),
+    path("posts/<int:pk>/commentsadd/", CommentAddView.as_view()),
     path("posts/<int:pk>/comments/<int:comment_pk>/", CommentDetailView.as_view()),
     path("posts/<int:pk>/comments/<int:comment_pk>/likes/", CommentLikeView.as_view()),
-    path("posts/<int:pk>/recomments/<int:recomment_pk>/", RecommentDetailView.as_view()),
-    path("posts/<int:pk>/recomments/<int:recomment_pk>/relikes", RecommentLikeView.as_view()),
+    path("comments/<int:comment_pk>/recomments/", RecommentView.as_view()),
+    path("comments/<int:comment_pk>/recommentsadd/", RecommentAddView.as_view()),
+    path("comments/<int:comment_pk>/recomments/<int:recomment_pk>/", RecommentDetailView.as_view()),
+    path("comments/<int:comment_pk>/recomments/<int:recomment_pk>/relikes", RecommentLikeView.as_view()),
     path("posts/<int:pk>/scrap/", PostScrapView.as_view()),
     path("search/", SearchView.as_view()),
 

@@ -39,7 +39,6 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comment")
     created_at = models.DateTimeField(auto_now_add=True)
     content = models.TextField()  # 댓글 내용
-<<<<<<< HEAD
     likes = models.ManyToManyField('account.User',related_name="liked_comments", blank=True )
     #def get_comment_like_count(self):
         #return self.comment_like.count()
@@ -53,20 +52,6 @@ class Recomment(models.Model):
     author = models.ForeignKey('account.User', null=True, on_delete=models.CASCADE) 
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments", null=True) # 대댓글 작성자
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name="recomments", null=True)
-=======
-    likes = models.ManyToManyField(
-        "account.User", related_name="liked_comments", blank=True
-    )
-
-
-class Recomment(models.Model):
-    author = models.ForeignKey(
-        "account.User", null=True, on_delete=models.CASCADE
-    )  # 대댓글 작성자
-    comment = models.ForeignKey(
-        Comment, on_delete=models.CASCADE, related_name="recomments"
-    )
->>>>>>> c3a5af4bd6bb7ca7c6c742497d5685cbc50c5370
     # 대댓글이 달린 댓글
     created_at = models.DateTimeField(auto_now_add=True)
     content = models.TextField()  # 대댓글 내용
