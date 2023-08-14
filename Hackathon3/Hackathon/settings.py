@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-@ic(wsa@rm#xfpwt3w8nxeug37!9ygoo(w8gn$ju7c-y^q=i*&"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['yewon1209.pythonanywhere.com'] #yewon1209.pythonanywhere.com
+ALLOWED_HOSTS = [] #yewon1209.pythonanywhere.com
 
 AUTH_USER_MODEL = "account.User"
 # Application definition
@@ -162,3 +162,23 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 CORS_ORIGIN_WHITELIST = ['http://127.0.0.1:3000'
                         ,'http://localhost:3000']
 CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'OPTIONS'  # Preflight 요청 허용
+]
+
+CORS_ALLOW_HEADERS = [
+    'Accept',
+    'Content-Type',
+    'Authorization',
+    'Access-Control-Allow-Origin' , # 예: JWT 토큰 헤더
+    # 다른 필요한 헤더들을 여기에 추가
+]
+
+CORS_ALLOW_CREDENTIALS = True
+CORS_PREFLIGHT_MAX_AGE = 86400

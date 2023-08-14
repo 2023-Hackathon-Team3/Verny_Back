@@ -5,4 +5,4 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     nickname=models.CharField(max_length=9)
-
+    manager=models.BooleanField(default=False)

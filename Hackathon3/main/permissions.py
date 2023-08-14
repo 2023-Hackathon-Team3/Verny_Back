@@ -3,12 +3,10 @@ from rest_framework import permissions
 
 class ManagerOnly(permissions.BasePermission):
     def has_permission(self, request, view):
-        return request.user.groups.filter(name="manager").exists()
+        if request.user.is_authenticated and request.user.manager:  # manager 값이 False일 경우
+            return True
+        return False
 
-
-#class UserOnly(permissions.BasePermission):
-#    def has_permission(self, request, view):
-#        return request.user.groups.filter(name="user").exists()
 
 class IsAuthorOrReadonly(permissions.BasePermission):
     def has_permission(self, request, view):

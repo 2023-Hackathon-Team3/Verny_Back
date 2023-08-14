@@ -50,7 +50,7 @@ class PostListView(views.APIView):
 
 
 class PostAddView(views.APIView):
-    permission_classes = [permissions.IsAuthenticated, ManagerOnly]
+    permission_classes = [IsAuthorOrReadonly, ManagerOnly, IsAuthenticated]  # IsAuthenticated
 
     def post(self, request, format=None):  # 게시글 작성 POST 메소드입니다!
         serializer = PostDetailSerializer(data=request.data)
@@ -63,7 +63,7 @@ class PostAddView(views.APIView):
 
 
 class PostEditView(views.APIView):
-    permission_classes = [IsAuthenticated, IsAuthorOrReadonly,ManagerOnly]
+    permission_classes = [IsAuthorOrReadonly, ManagerOnly, IsAuthenticated]  # IsAuthenticated
     def get(self, request, pk, format=None):
         post = get_object_or_404(Post, pk=pk)
         serializer = PostDetailSerializer(post)
@@ -83,7 +83,7 @@ class PostEditView(views.APIView):
         return Response({"message": "게시글 수정 실패", "data": serializer.errors})
 
 class PostDetailView(views.APIView):
-    permission_classes = [IsAuthenticated, IsAuthorOrReadonly]  # 작품 해설(detail) 조회
+    permission_classes = [IsAuthorOrReadonly, IsAuthenticated]  # IsAuthenticated 작품 해설(detail) 조회
     def get(self, request, pk, format=None):
         post = get_object_or_404(Post, pk=pk)
         serializer = PostDetailSerializer(post)
@@ -91,7 +91,7 @@ class PostDetailView(views.APIView):
 
 
 class PostScrapView(views.APIView):
-    permission_classes = [IsAuthenticated, IsAuthorOrReadonly]
+    permission_classes = [IsAuthorOrReadonly, IsAuthenticated]  # IsAuthenticated
     def get(self, request, pk):
         post = get_object_or_404(Post, pk=pk)
         scraped_by_user = request.user in post.scraps.all()
@@ -142,7 +142,7 @@ class CommentAddView(views.APIView):
 
 
 class CommentDetailView(views.APIView):
-    permission_classes = [IsAuthenticated, IsAuthorOrReadonly]  # 댓글 수정,삭제, 대댓글 작성
+    permission_classes = [IsAuthorOrReadonly, IsAuthenticated]  # IsAuthenticated  # 댓글 수정,삭제, 대댓글 작성
     def get(self, request, pk, comment_pk, format=None):
         comment = get_object_or_404(Comment, post_id=pk, pk=comment_pk)
         serializer = CommentDetailSerializer(comment)
@@ -175,7 +175,7 @@ class RecommentAddView(views.APIView):
 
 
 class CommentLikeView(views.APIView):
-    permission_classes = [IsAuthenticated, IsAuthorOrReadonly]  # 댓글 좋아요
+    permission_classes = [IsAuthorOrReadonly, IsAuthenticated]  # IsAuthenticated  # 댓글 좋아요
     def get(self, request, pk, comment_pk):
         comment = get_object_or_404(Comment, post_id=pk, pk=comment_pk)
         liked_by_user = request.user in comment.likes.all()
@@ -203,7 +203,7 @@ class RecommentView(views.APIView):
 
 
 class RecommentDetailView(views.APIView):
-    permission_classes = [IsAuthenticated, IsAuthorOrReadonly]  # 대댓글 조회, 수정, 삭제
+    permission_classes = [IsAuthorOrReadonly, IsAuthenticated]  # IsAuthenticated
     def get(self, request, comment_pk, recomment_pk, format=None):
         recomment = get_object_or_404(Recomment, pk=recomment_pk)
         serializer = RecommentSerializer(recomment)
@@ -224,7 +224,7 @@ class RecommentDetailView(views.APIView):
 
 
 class RecommentLikeView(views.APIView):
-    permission_classes = [IsAuthenticated, IsAuthorOrReadonly]  # 대댓글 좋아요
+    permission_classes = [IsAuthorOrReadonly, IsAuthenticated]  # IsAuthenticated
     def get(self, request, comment_pk, recomment_pk):
         recomment = get_object_or_404(Recomment, pk=recomment_pk)
         reliked_by_user = request.user in recomment.relikes.all()
@@ -269,7 +269,7 @@ class SearchView(views.APIView):
                 )
             else:
                 return Response(
-                    {"message": "검색결과가 없어요. 다시 시도해주시겠어요?"}, status=HTTP_204_NO_CONTENT
+                    {"message": "검색결과가 없어요. 다시 시도해주시겠어요?"}
                 )
         else:
             return Response({"message": "검색어를 입력하세요."}, status=HTTP_400_BAD_REQUEST)
