@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     'rest_framework.authtoken',
-    
     "corsheaders",
     "account",
     "main",
@@ -159,26 +158,18 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-CORS_ORIGIN_WHITELIST = ['http://127.0.0.1:3000'
-                        ,'http://localhost:3000']
-CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = ['https://verny-verny.vercel.app',
+                        'http://127.0.0.1:3000',
+                        'http://localhost:3000']
 
-CORS_ALLOW_METHODS = [
-    'GET',
-    'POST',
-    'PUT',
-    'PATCH',
-    'DELETE',
-    'OPTIONS'  # Preflight 요청 허용
-]
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_HEADERS = [
     'Accept',
     'Content-Type',
     'Authorization',
-    'Access-Control-Allow-Origin' , # 예: JWT 토큰 헤더
-    # 다른 필요한 헤더들을 여기에 추가
+
 ]
 
-CORS_ALLOW_CREDENTIALS = True
-CORS_PREFLIGHT_MAX_AGE = 86400
+

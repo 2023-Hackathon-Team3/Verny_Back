@@ -15,10 +15,12 @@ from main.serializers import *
 
 class SignUpView(views.APIView):
     serializer_class = SignUpSerializer
+    def get(self, request):
+        return Response(status=HTTP_200_OK)
 
-    def post(self, request, format=None):
+    def post(self, request ):
         serializer = self.serializer_class(data=request.data)
-
+        #serializer= SignUpSerializer
         if serializer.is_valid():
             serializer.save()
             return Response({'message': '회원가입 성공', 'data': serializer.data}, status=HTTP_201_CREATED)
@@ -27,7 +29,13 @@ class SignUpView(views.APIView):
 class LoginView(views.APIView):
     serializer_class = LoginSerializer
 
+
+    def get(self, request):
+        return Response(status=HTTP_200_OK)
+    
     def post(self, request):
+        #serializer = LoginSerializer
+        
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             return Response({'message': "로그인 성공", 'data': serializer.validated_data}, status=HTTP_200_OK)

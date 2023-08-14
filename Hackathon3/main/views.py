@@ -16,7 +16,7 @@ from rest_framework.permissions import *
 
 
 class PostListView(views.APIView):
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
     def get(self, request):
         order_by = request.query_params.get("order_by")
         type_filter = request.query_params.get("type")
@@ -50,7 +50,11 @@ class PostListView(views.APIView):
 
 
 class PostAddView(views.APIView):
-    permission_classes = [IsAuthorOrReadonly, ManagerOnly, IsAuthenticated]  # IsAuthenticated
+    permission_classes = [IsAuthorOrReadonly, ManagerOnly]  # IsAuthenticated
+
+    def get(self, request):
+        return Response(status=HTTP_200_OK)
+
 
     def post(self, request, format=None):  # 게시글 작성 POST 메소드입니다!
         serializer = PostDetailSerializer(data=request.data)
@@ -63,7 +67,7 @@ class PostAddView(views.APIView):
 
 
 class PostEditView(views.APIView):
-    permission_classes = [IsAuthorOrReadonly, ManagerOnly, IsAuthenticated]  # IsAuthenticated
+    permission_classes = [IsAuthorOrReadonly, ManagerOnly]  # IsAuthenticated
     def get(self, request, pk, format=None):
         post = get_object_or_404(Post, pk=pk)
         serializer = PostDetailSerializer(post)
@@ -83,7 +87,7 @@ class PostEditView(views.APIView):
         return Response({"message": "게시글 수정 실패", "data": serializer.errors})
 
 class PostDetailView(views.APIView):
-    permission_classes = [IsAuthorOrReadonly, IsAuthenticated]  # IsAuthenticated 작품 해설(detail) 조회
+    #permission_classes = [IsAuthorOrReadonly]  # IsAuthenticated 작품 해설(detail) 조회
     def get(self, request, pk, format=None):
         post = get_object_or_404(Post, pk=pk)
         serializer = PostDetailSerializer(post)
@@ -91,7 +95,7 @@ class PostDetailView(views.APIView):
 
 
 class PostScrapView(views.APIView):
-    permission_classes = [IsAuthorOrReadonly, IsAuthenticated]  # IsAuthenticated
+    permission_classes = [IsAuthorOrReadonly]  # IsAuthenticated
     def get(self, request, pk):
         post = get_object_or_404(Post, pk=pk)
         scraped_by_user = request.user in post.scraps.all()
@@ -112,7 +116,7 @@ class PostScrapView(views.APIView):
 
 
 class CommentView(views.APIView):
-    permission_classes = [IsAuthenticated]  # 댓글 조회, 작성
+    #permission_classes = [IsAuthenticated]  # 댓글 조회, 작성
     def get(self, request, pk):
         order_by = request.query_params.get("order_by")
 
@@ -131,7 +135,10 @@ class CommentView(views.APIView):
     # http://127.0.0.1:8000/main/posts/1/comments/?order_by=lastest
 
 class CommentAddView(views.APIView):
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
+    def get(self, request, pk):
+        return Response(status=HTTP_200_OK)
+
     def post(self, request, pk, format=None):
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid():
@@ -142,7 +149,7 @@ class CommentAddView(views.APIView):
 
 
 class CommentDetailView(views.APIView):
-    permission_classes = [IsAuthorOrReadonly, IsAuthenticated]  # IsAuthenticated  # 댓글 수정,삭제, 대댓글 작성
+    permission_classes = [IsAuthorOrReadonly]  # IsAuthenticated  # 댓글 수정,삭제, 대댓글 작성
     def get(self, request, pk, comment_pk, format=None):
         comment = get_object_or_404(Comment, post_id=pk, pk=comment_pk)
         serializer = CommentDetailSerializer(comment)
@@ -163,7 +170,10 @@ class CommentDetailView(views.APIView):
 
 
 class RecommentAddView(views.APIView):
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated] 
+    def get(self, request, comment_pk):
+        return Response(status=HTTP_200_OK)
+
     def post(self, request, comment_pk, format=None):
         comment = get_object_or_404(Comment, pk=comment_pk)
         serializer = RecommentSerializer(data=request.data)
@@ -175,7 +185,7 @@ class RecommentAddView(views.APIView):
 
 
 class CommentLikeView(views.APIView):
-    permission_classes = [IsAuthorOrReadonly, IsAuthenticated]  # IsAuthenticated  # 댓글 좋아요
+    permission_classes = [IsAuthorOrReadonly]  # IsAuthenticated  # 댓글 좋아요
     def get(self, request, pk, comment_pk):
         comment = get_object_or_404(Comment, post_id=pk, pk=comment_pk)
         liked_by_user = request.user in comment.likes.all()
@@ -195,7 +205,7 @@ class CommentLikeView(views.APIView):
         return Response({"message": "좋아요 변경 성공", "liked": liked})
 
 class RecommentView(views.APIView):
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
     def get(self, request, comment_pk, format=None):
         recomment = get_object_or_404(Recomment, pk=comment_pk)
         serializer = RecommentSerializer(recomment)
@@ -203,7 +213,7 @@ class RecommentView(views.APIView):
 
 
 class RecommentDetailView(views.APIView):
-    permission_classes = [IsAuthorOrReadonly, IsAuthenticated]  # IsAuthenticated
+    permission_classes = [IsAuthorOrReadonly]  # IsAuthenticated
     def get(self, request, comment_pk, recomment_pk, format=None):
         recomment = get_object_or_404(Recomment, pk=recomment_pk)
         serializer = RecommentSerializer(recomment)
@@ -224,7 +234,7 @@ class RecommentDetailView(views.APIView):
 
 
 class RecommentLikeView(views.APIView):
-    permission_classes = [IsAuthorOrReadonly, IsAuthenticated]  # IsAuthenticated
+    permission_classes = [IsAuthorOrReadonly]  # IsAuthenticated
     def get(self, request, comment_pk, recomment_pk):
         recomment = get_object_or_404(Recomment, pk=recomment_pk)
         reliked_by_user = request.user in recomment.relikes.all()
@@ -245,7 +255,7 @@ class RecommentLikeView(views.APIView):
 
 
 class SearchView(views.APIView):
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
     def get(self, request):
         queryset = Post.objects.all()
         search_query = request.query_params.get("q")
