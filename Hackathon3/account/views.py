@@ -37,17 +37,6 @@ class ProfileView(views.APIView):
     serializer_class = ProfileSerializer
     permission_classes = [IsAuthenticated]
 
-    # def get(self, request, format=None):
-    #     serializer = ProfileSerializer(request.user)
-    #     return Response({'message': '프로필 가져오기 성공', 'data': serializer.data}, status=HTTP_200_OK)
-
-    # def put(self, request, format=None):
-    #     serializer = ProfileSerializer(data=request.user)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response({'message': '프로필 가져오기 성공', 'data': serializer.data}, status=HTTP_200_OK)
-    #     return Response(serializer.errors)
-
     def get(self, request, format=None):
         serializer = self.serializer_class(request.user)  # Assuming the profile is related to the user
         return Response({'message': '프로필 가져오기 성공', 'data': serializer.data}, status=HTTP_200_OK)
@@ -76,7 +65,7 @@ class MyScrapedView(views.APIView):
             serializer = PostSerializer(scraped_posts, many=True)
             return response.Response({'message': '내가 스크랩 한 포스트 조회 성공', 'data': serializer.data}, status=HTTP_200_OK)
         else:
-            return response.Response({'message': '내가 스크랩 한 포스트가 없습니다.'}, status=HTTP_204_NO_CONTENT)
+            return response.Response({'message': '내가 스크랩 한 포스트가 없습니다.'})
         
 class MyPostedView(views.APIView):
     #authentication_classes = [SessionAuthentication, BasicAuthentication]
@@ -92,7 +81,7 @@ class MyPostedView(views.APIView):
             serializer = PostSerializer(user_posts, many=True)  # 댓글 시리얼라이저를 import하세요.
             return response.Response({'message': '내가 작성한 게시물 조회 성공', 'data': serializer.data}, status=HTTP_200_OK)
         else:
-            return response.Response({'message': '내가 작성한 게시물이 없습니다.'}, status=HTTP_204_NO_CONTENT)
+            return response.Response({'message': '내가 작성한 게시물이 없습니다.'})
 
 class MyCommentView(views.APIView):
     serializer_class = CommentSerializer
@@ -108,7 +97,7 @@ class MyCommentView(views.APIView):
             serializer = CommentSerializer(user_comments, many=True)  # 댓글 시리얼라이저를 import하세요.
             return response.Response({'message': '내가 작성한 댓글 조회 성공', 'data': serializer.data}, status=HTTP_200_OK)
         else:
-            return response.Response({'message': '내가 작성한 댓글이 없습니다.'}, status=HTTP_204_NO_CONTENT)
+            return response.Response({'message': '내가 작성한 댓글이 없습니다.'})
 
 class MyRecommentView(views.APIView):
     serializer_class = RecommentSerializer
@@ -124,4 +113,22 @@ class MyRecommentView(views.APIView):
             serializer = RecommentSerializer(user_recomments, many=True)  # 댓글 시리얼라이저를 import하세요.
             return response.Response({'message': '내가 작성한 대댓글 조회 성공', 'data': serializer.data}, status=HTTP_200_OK)
         else:
-            return response.Response({'message': '내가 작성한 대댓글이 없습니다.'}, status=HTTP_204_NO_CONTENT)
+            return response.Response({'message': '내가 작성한 대댓글이 없습니다.'})
+        
+class UserProfileView(views.APIView):
+    def get(self, request, user_id, format=None):
+        user = get_object_or_404(User, id=user_id)
+        comments = Comment.objects.filter(author=user)
+        recomments = Recomment.objects.filter(author=user)
+
+        comment_serializer = CommentSerializer(comments, many=True)
+        recomment_serializer = RecommentSerializer(recomments, many=True)
+
+        profile_data = {
+            "username": user.username,
+            "comments": comment_serializer.data,
+            "recomments": recomment_serializer.data,
+            # ... 다른 프로필 정보 ...
+        }
+
+        return response.Response(profile_data, status=HTTP_200_OK)
